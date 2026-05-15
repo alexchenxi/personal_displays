@@ -97,7 +97,7 @@ ai-sse-helper/
 
 ```bash
 # 安装 pnpm（如未安装）
-npm install -g pnpm@9.5.0
+npm install -g pnpm@10.0.0
 
 # 安装项目依赖
 pnpm install
@@ -148,10 +148,10 @@ OPENAI_MODEL=moonshot-v1-8k
 
 ## 国际化说明
 
-| 语言 | 代码 | 方向 | 翻译文件 |
-|------|------|------|----------|
-| 中文 | `zh` | LTR | `messages/zh.json` |
-| English | `en` | LTR | `messages/en.json` |
+| 语言    | 代码 | 方向    | 翻译文件           |
+| ------- | ---- | ------- | ------------------ |
+| 中文    | `zh` | LTR     | `messages/zh.json` |
+| English | `en` | LTR     | `messages/en.json` |
 | العربية | `ar` | **RTL** | `messages/ar.json` |
 
 - 默认语言：中文（`zh`）
@@ -160,14 +160,14 @@ OPENAI_MODEL=moonshot-v1-8k
 
 ## 性能数据
 
-| 指标 | 数值 | 说明 |
-|------|------|------|
-| **Lighthouse Performance** | 98+ | 服务端渲染 + 静态生成 |
-| **First Contentful Paint** | < 1.0s | Tailwind v4 按需生成 CSS |
-| **Time to Interactive** | < 1.5s | 客户端组件最小化 |
-| **API 首字节时间（TTFB）** | < 200ms | Edge Runtime 全球边缘节点 |
-| **流式首字延迟** | < 500ms | SSE 流式传输，无需等待完整响应 |
-| **构建缓存命中** | 二次构建 < 3s | Turborepo 缓存机制 |
+| 指标                       | 数值          | 说明                           |
+| -------------------------- | ------------- | ------------------------------ |
+| **Lighthouse Performance** | 98+           | 服务端渲染 + 静态生成          |
+| **First Contentful Paint** | < 1.0s        | Tailwind v4 按需生成 CSS       |
+| **Time to Interactive**    | < 1.5s        | 客户端组件最小化               |
+| **API 首字节时间（TTFB）** | < 200ms       | Edge Runtime 全球边缘节点      |
+| **流式首字延迟**           | < 500ms       | SSE 流式传输，无需等待完整响应 |
+| **构建缓存命中**           | 二次构建 < 3s | Turborepo 缓存机制             |
 
 ## 实现原理
 
@@ -211,18 +211,18 @@ OPENAI_MODEL=moonshot-v1-8k
 
 ## 技术栈
 
-| 技术 | 版本 | 用途 |
-|------|------|------|
-| Next.js | 16.1 | 全栈框架 |
-| React | 19.2 | UI 框架 |
-| TypeScript | 5 | 类型安全 |
-| Tailwind CSS | v4 | 原子化样式 |
-| Vercel AI SDK | 2.2 | AI 流式对话 |
-| OpenAI SDK | 4.68 | 大模型 API 客户端 |
-| next-intl | v4 | 国际化 |
-| next-themes | 0.4 | 暗黑模式 |
-| Turborepo | 2.8 | Monorepo 任务编排 |
-| pnpm | 9.5 | 包管理器 |
+| 技术          | 版本   | 用途              |
+| ------------- | ------ | ----------------- |
+| Next.js       | 16.1   | 全栈框架          |
+| React         | 19.2   | UI 框架           |
+| TypeScript    | 5      | 类型安全          |
+| Tailwind CSS  | v4     | 原子化样式        |
+| Vercel AI SDK | 2.2    | AI 流式对话       |
+| OpenAI SDK    | 4.68   | 大模型 API 客户端 |
+| next-intl     | v4     | 国际化            |
+| next-themes   | 0.4    | 暗黑模式          |
+| Turborepo     | 2.8    | Monorepo 任务编排 |
+| pnpm          | 10.0.0 | 包管理器          |
 
 ## License
 
