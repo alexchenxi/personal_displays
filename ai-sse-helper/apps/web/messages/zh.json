@@ -5,7 +5,7 @@
   },
   "chat": {
     "title": "AI 流式对话",
-    "subtitle": "SSE 实时打字效果 · 多模型支持",
+    "subtitle": "SSE 实时打字效果",
     "placeholder": "输入你的问题...",
     "send": "发送",
     "you": "你",
