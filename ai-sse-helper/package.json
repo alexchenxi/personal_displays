@@ -1,0 +1,14 @@
+{
+  "name": "ai-sse-helper",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.5.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.8.17"
+  }
+}

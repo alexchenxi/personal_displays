@@ -1,0 +1,31 @@
+{
+  "app": {
+    "title": "AI SSE Helper - Streaming Chat Demo",
+    "description": "Real-time AI streaming chat with SSE, i18n, dark mode, and responsive design"
+  },
+  "chat": {
+    "title": "AI Streaming Chat",
+    "subtitle": "Real-time SSE typing effect · Multi-model support",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "you": "You",
+    "ai": "AI",
+    "empty": "Start a conversation with AI",
+    "thinking": "AI is thinking...",
+    "error": "Something went wrong, please try again",
+    "errorTitle": "Server Error",
+    "errorClose": "Dismiss",
+    "error500": "Internal server error, please try again later",
+    "errorNetwork": "Network connection failed, please check your connection",
+    "errorUnknown": "An unknown error occurred, please try again later"
+  },
+  "nav": {
+    "theme": "Toggle theme",
+    "language": "Language"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "app": {
+    "title": "AI SSE Helper - 流式对话演示",
+    "description": "实时 AI 流式对话，支持 SSE、国际化、暗黑模式、响应式设计"
+  },
+  "chat": {
+    "title": "AI 流式对话",
+    "subtitle": "SSE 实时打字效果 · 多模型支持",
+    "placeholder": "输入你的问题...",
+    "send": "发送",
+    "you": "你",
+    "ai": "AI",
+    "empty": "开始与 AI 对话吧",
+    "thinking": "AI 正在思考...",
+    "error": "出错了，请重试",
+    "errorTitle": "服务器错误",
+    "errorClose": "关闭提示",
+    "error500": "服务器内部错误，请稍后重试",
+    "errorNetwork": "网络连接失败，请检查网络后重试",
+    "errorUnknown": "未知错误，请稍后重试"
+  },
+  "nav": {
+    "theme": "切换主题",
+    "language": "语言"
+  },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统"
+  }
+}
