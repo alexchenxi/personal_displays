@@ -27,5 +27,35 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "home": {
+    "hero": {
+      "title": "AI SSE Helper",
+      "subtitle": "A full-stack demo showcasing AI streaming chat with SSE, multilingual support, and Stripe payment integration — built with Next.js and Ant Design.",
+      "startChat": "Start AI Chat",
+      "tryPayment": "Try Payment Demo"
+    },
+    "features": {
+      "streaming": {
+        "title": "AI Streaming Chat",
+        "desc": "Real-time SSE typing effect with multi-model support for an immersive conversational experience."
+      },
+      "multilingual": {
+        "title": "Multilingual",
+        "desc": "Full internationalization support with English, Chinese, and Arabic, including RTL layout."
+      },
+      "payment": {
+        "title": "Stripe Payments",
+        "desc": "Secure payment processing demo with support for subscriptions, invoices, and payment methods."
+      }
+    },
+    "nav": {
+      "title": "Explore Demos",
+      "aiHelper": "AI Streaming Chat",
+      "aiHelperDesc": "Real-time conversational AI with streaming responses",
+      "stripeUI": "Stripe Payment UI",
+      "stripeUIDesc": "Secure payment processing and subscription management",
+      "visit": "Visit"
+    }
   }
 }

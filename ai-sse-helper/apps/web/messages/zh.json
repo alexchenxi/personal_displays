@@ -27,5 +27,35 @@
     "light": "浅色",
     "dark": "深色",
     "system": "跟随系统"
+  },
+  "home": {
+    "hero": {
+      "title": "AI SSE 助手",
+      "subtitle": "全栈演示项目，展示基于 SSE 的 AI 流式对话、多语言支持和 Stripe 支付集成 — 使用 Next.js 和 Ant Design 构建。",
+      "startChat": "开始 AI 对话",
+      "tryPayment": "体验支付演示"
+    },
+    "features": {
+      "streaming": {
+        "title": "AI 流式对话",
+        "desc": "实时 SSE 打字效果，支持多种模型，提供沉浸式对话体验。"
+      },
+      "multilingual": {
+        "title": "多语言支持",
+        "desc": "完整的国际化支持，包含英语、中文和阿拉伯语，支持 RTL 布局。"
+      },
+      "payment": {
+        "title": "Stripe 支付",
+        "desc": "安全的支付处理演示，支持订阅、发票和多种支付方式。"
+      }
+    },
+    "nav": {
+      "title": "探索演示",
+      "aiHelper": "AI 流式对话",
+      "aiHelperDesc": "实时 AI 对话，支持流式响应",
+      "stripeUI": "Stripe 支付界面",
+      "stripeUIDesc": "安全的支付处理和订阅管理",
+      "visit": "前往"
+    }
   }
 }

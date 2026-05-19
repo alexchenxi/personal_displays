@@ -9,7 +9,6 @@ import {
   Row,
   InputNumber,
   Select,
-  Flex,
   Space,
   Radio,
   Col,
@@ -32,6 +31,7 @@ import {
 import { loadStripe, StripeElementsOptions, Stripe } from "@stripe/stripe-js"
 import { useEffect, useState, useMemo, useRef, useCallback } from "react"
 import GlobalLoading from "@/components/GlobalLoading"
+import BackToHome from "@/components/BackToHome"
 
 const { Title } = Typography
 
@@ -214,11 +214,12 @@ const FormContainer = ({
       <Title level={4}>Collect a Payment Method</Title>
       <PaymentElement onLoadError={handlePaymentElementError} />
       <Row align="middle" className="mt-4">
-        <Col span={8}>
+        <Col xs={24} sm={8}>
           <Button
             type="primary"
             onClick={handleConfirm}
             disabled={!stripe || !elements}
+            block
           >
             Confirm Payment
           </Button>
@@ -462,7 +463,7 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
           background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
         }}
       >
-        <div className="mx-auto max-w-6xl px-4 py-8">
+        <div className="mx-auto max-w-6xl px-3 py-6 sm:px-4 sm:py-8">
           {contextHolder}
           <Title
             level={2}
@@ -583,21 +584,23 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
               <div style={{ fontWeight: 600, fontSize: 15, color: "#333" }}>
                 Payment Method Configuration
               </div>
-              <Row gutter={[24, 12]} align="middle">
-                <Col>
-                  <span style={{ marginRight: 12, color: "#555" }}>Mode:</span>
-                  <Radio.Group
-                    value={paymentMethodSelectionMode}
-                    onChange={(e) =>
-                      handlePaymentMethodSelectionModeChange(e.target.value)
-                    }
-                    disabled={isProcessing}
-                  >
-                    <Radio value="dynamic">Dynamic</Radio>
-                    <Radio value="explicit">Explicit</Radio>
-                  </Radio.Group>
+              <Row gutter={[12, 12]} align="middle">
+                <Col xs={24} sm={12} md={12}>
+                  <Space wrap>
+                    <span style={{ color: "#555" }}>Mode:</span>
+                    <Radio.Group
+                      value={paymentMethodSelectionMode}
+                      onChange={(e) =>
+                        handlePaymentMethodSelectionModeChange(e.target.value)
+                      }
+                      disabled={isProcessing}
+                    >
+                      <Radio value="dynamic">Dynamic</Radio>
+                      <Radio value="explicit">Explicit</Radio>
+                    </Radio.Group>
+                  </Space>
                 </Col>
-                <Col>
+                <Col xs={24} sm={12} md={12}>
                   <Space>
                     <span style={{ color: "#555" }}>Use Stripe SDK:</span>
                     <Switch
@@ -610,50 +613,58 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
 
               {/* Dynamic: show dropdown of Stripe payment method configurations */}
               {paymentMethodSelectionMode === "dynamic" && (
-                <Flex align="center" gap={12} wrap="wrap">
-                  <div>
-                    <div
-                      style={{
-                        marginBottom: 4,
-                        fontWeight: 500,
-                        color: "#555",
-                      }}
-                    >
-                      Configuration
-                    </div>
-                    <Select
-                      style={{ width: 360 }}
-                      value={selectedConfigId || undefined}
-                      onChange={(val) => {
-                        setSelectedConfigId(val)
-                        setCustomerSessionClientSecret(null)
-                      }}
-                      options={pmConfigs}
-                      loading={configsLoading}
-                      placeholder={
-                        configsLoading
-                          ? "Loading configurations..."
-                          : pmConfigs.length === 0
-                            ? "Click to load configurations"
-                            : "Select a configuration"
-                      }
-                      disabled={isProcessing}
-                      onOpenChange={(open) => {
-                        if (open && pmConfigs.length === 0 && !configsLoading) {
-                          fetchPmConfigs()
+                <div style={{ width: "100%" }}>
+                  <Row gutter={[12, 12]} align="bottom">
+                    <Col xs={24} sm={18} md={16}>
+                      <div
+                        style={{
+                          marginBottom: 4,
+                          fontWeight: 500,
+                          color: "#555",
+                        }}
+                      >
+                        Configuration
+                      </div>
+                      <Select
+                        style={{ width: "100%" }}
+                        value={selectedConfigId || undefined}
+                        onChange={(val) => {
+                          setSelectedConfigId(val)
+                          setCustomerSessionClientSecret(null)
+                        }}
+                        options={pmConfigs}
+                        loading={configsLoading}
+                        placeholder={
+                          configsLoading
+                            ? "Loading configurations..."
+                            : pmConfigs.length === 0
+                              ? "Click to load configurations"
+                              : "Select a configuration"
                         }
-                      }}
-                    />
-                  </div>
-                  <Button
-                    onClick={fetchPmConfigs}
-                    loading={configsLoading}
-                    disabled={isProcessing}
-                    style={{ marginTop: 22 }}
-                  >
-                    Refresh
-                  </Button>
-                </Flex>
+                        disabled={isProcessing}
+                        onOpenChange={(open) => {
+                          if (
+                            open &&
+                            pmConfigs.length === 0 &&
+                            !configsLoading
+                          ) {
+                            fetchPmConfigs()
+                          }
+                        }}
+                      />
+                    </Col>
+                    <Col xs={24} sm={6} md={8}>
+                      <Button
+                        onClick={fetchPmConfigs}
+                        loading={configsLoading}
+                        disabled={isProcessing}
+                        block
+                      >
+                        Refresh
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
               )}
 
               {/* Explicit: multi-select from static SDK-derived payment method types */}
@@ -689,6 +700,7 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
               disabled={!isReadyToInitialize}
               onClick={handleInitializeSession}
               loading={isProcessing}
+              className="w-full sm:w-auto"
             >
               Initialize Session
             </Button>
@@ -722,6 +734,7 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
           )}
         </div>
       </div>
+      <BackToHome />
     </>
   )
 }

@@ -1,0 +1,36 @@
+
+> web@0.1.0 build E:\myproject\personal_displays\ai-sse-helper\apps\web
+> next build
+
+▲ Next.js 16.1.7 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 29.9s
+  Running TypeScript ...
+  Collecting page data using 15 workers ...
+⚠ Using edge runtime on a page currently disables static generation for that page
+  Generating static pages using 15 workers (0/7) ...
+  Generating static pages using 15 workers (1/7) 
+  Generating static pages using 15 workers (3/7) 
+  Generating static pages using 15 workers (5/7) 
+✓ Generating static pages using 15 workers (7/7) in 7.3s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/ai-helper
+├ ƒ /api/chat
+├ ƒ /api/create-customer-session
+├ ƒ /api/list-payment-method-configurations
+├ ƒ /api/payment-intents-confirmation-token
+├ ƒ /api/read-country-specs
+└ ○ /stripe-ui
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
