@@ -8,6 +8,7 @@ import {
   GlobalOutlined,
   SafetyOutlined,
   ArrowRightOutlined,
+  FileImageTwoTone,
 } from "@ant-design/icons"
 import { useTranslations } from "next-intl"
 import { Link, usePathname } from "@/i18n/routing"
@@ -201,6 +202,42 @@ export default function HomePage() {
                   </Col>
                   <Col>
                     <Tag color="green" className="flex items-center gap-1">
+                      {t("home.nav.visit")} <ArrowRightOutlined />
+                    </Tag>
+                  </Col>
+                </Row>
+              </Card>
+            </Link>
+          </Col>
+          <Col xs={24} md={12}>
+            <Link href="/image-inference">
+              <Card
+                hoverable
+                className={`cursor-pointer transition-all hover:-translate-y-1 ${
+                  pathname === "/image-inference"
+                    ? "ring-2 ring-orange-400"
+                    : ""
+                }`}
+              >
+                <Row align="middle" gutter={16}>
+                  <Col>
+                    <div
+                      className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500"
+                      style={{ color: "#fff", fontSize: 24 }}
+                    >
+                      <FileImageTwoTone />
+                    </div>
+                  </Col>
+                  <Col flex={1}>
+                    <Title level={4} style={{ marginBottom: 4 }}>
+                      图片推理
+                    </Title>
+                    <Paragraph style={{ marginBottom: 0, color: "#666" }}>
+                      使用 EfficientNet-Lite4 模型进行图像分类识别
+                    </Paragraph>
+                  </Col>
+                  <Col>
+                    <Tag color="orange" className="flex items-center gap-1">
                       {t("home.nav.visit")} <ArrowRightOutlined />
                     </Tag>
                   </Col>
