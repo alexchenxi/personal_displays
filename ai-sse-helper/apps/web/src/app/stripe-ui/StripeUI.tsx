@@ -2,6 +2,7 @@
 import "@ant-design/v5-patch-for-react-19"
 import {
   Button,
+  Card,
   Typography,
   message,
   Input,
@@ -455,194 +456,271 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
   return (
     <>
       {isProcessing && <GlobalLoading />}
-      <div className="container m-2 p-2">
-        {contextHolder}
-        <Title className="text-4xl m-2">Stripe Payment Demo</Title>
+      <div
+        className="min-h-screen"
+        style={{
+          background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+        }}
+      >
+        <div className="mx-auto max-w-6xl px-4 py-8">
+          {contextHolder}
+          <Title
+            level={2}
+            style={{
+              textAlign: "center",
+              marginBottom: 32,
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Stripe Payment Demo
+          </Title>
 
-        {/* Configuration Panel */}
-        <Row align="middle" className="my-4">
-          <Space size={12} wrap align="center">
-            {/* Customer ID */}
-            <Space.Compact>
-              <span className="ant-input-group-addon">Customer</span>
-              <Input
-                style={{ width: "240px" }}
-                value={customerId}
-                onChange={(e) => {
-                  setCustomerId(e.target.value)
-                  setCustomerSessionClientSecret(null)
-                }}
-                placeholder="cus_xxx"
-                disabled={isProcessing}
-              />
-            </Space.Compact>
-
-            {/* Country */}
-            <Space.Compact>
-              <span className="ant-input-group-addon">Country/Regions</span>
-              <Select
-                showSearch
-                value={country}
-                style={{ width: "180px" }}
-                onChange={handleCountryChange}
-                options={COUNTRY_LIST}
-                placeholder="Select country"
-                disabled={isProcessing}
-                filterOption={(input, option) =>
-                  (option?.label ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-              />
-            </Space.Compact>
-
-            {/* Currency — populated after country selection */}
-            <Space.Compact>
-              <span className="ant-input-group-addon">Currency</span>
-              <Select
-                showSearch
-                value={currency || undefined}
-                style={{ width: "120px" }}
-                onChange={(val) => {
-                  setCurrency(val)
-                  setCustomerSessionClientSecret(null)
-                }}
-                options={currencyList}
-                placeholder="Select"
-                disabled={isProcessing || !country}
-              />
-            </Space.Compact>
-
-            {/* Amount */}
-            <Space.Compact>
-              <span className="ant-input-group-addon">Amount</span>
-              <InputNumber
-                style={{ width: "160px" }}
-                value={amount}
-                onChange={onChangeAmount}
-                min={1}
-                step={1}
-                disabled={isProcessing}
-                formatter={(value) =>
-                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }
-                parser={(value) => Number(value?.replace(/\$\s?|(,*)/g, ""))}
-              />
-            </Space.Compact>
-          </Space>
-        </Row>
-
-        {/* Payment method mode selection */}
-        <Row className="my-4">
-          <Space direction="vertical" size={8}>
-            <span>Payment Method Mode:</span>
-            <Radio.Group
-              value={paymentMethodSelectionMode}
-              onChange={(e) =>
-                handlePaymentMethodSelectionModeChange(e.target.value)
-              }
-              disabled={isProcessing}
-            >
-              <Radio value="dynamic">Dynamic</Radio>
-              <Radio value="explicit">Explicit</Radio>
-            </Radio.Group>
-            <Space>
-              <span>Use Stripe SDK:</span>
-              <Switch
-                checked={useStripeSDK}
-                onChange={() => setUseStripeSDK((prev) => !prev)}
-              ></Switch>
-            </Space>
-
-            {/* Dynamic: show dropdown of Stripe payment method configurations */}
-            {paymentMethodSelectionMode === "dynamic" && (
-              <Flex align="center" gap={8}>
-                <Space.Compact>
-                  <span className="ant-input-group-addon">Configuration</span>
-                  <Select
-                    style={{ width: "360px" }}
-                    value={selectedConfigId || undefined}
-                    onChange={(val) => {
-                      setSelectedConfigId(val)
-                      setCustomerSessionClientSecret(null)
-                    }}
-                    options={pmConfigs}
-                    loading={configsLoading}
-                    placeholder={
-                      configsLoading
-                        ? "Loading configurations..."
-                        : pmConfigs.length === 0
-                          ? "Click to load configurations"
-                          : "Select a configuration"
-                    }
-                    disabled={isProcessing}
-                    onOpenChange={(open) => {
-                      if (open && pmConfigs.length === 0 && !configsLoading) {
-                        fetchPmConfigs()
-                      }
-                    }}
-                  />
-                </Space.Compact>
-                <Button
-                  size="small"
-                  onClick={fetchPmConfigs}
-                  loading={configsLoading}
-                  disabled={isProcessing}
+          {/* Configuration Panel */}
+          <Card
+            style={{
+              borderRadius: 12,
+              boxShadow: "0 4px 24px rgba(0, 0, 0, 0.08)",
+              marginBottom: 24,
+            }}
+          >
+            <Row gutter={[16, 16]} align="middle">
+              {/* Customer ID */}
+              <Col xs={24} sm={12} md={6}>
+                <div
+                  style={{ marginBottom: 4, fontWeight: 500, color: "#555" }}
                 >
-                  Refresh
-                </Button>
-              </Flex>
-            )}
-
-            {/* Explicit: multi-select from static SDK-derived payment method types */}
-            {paymentMethodSelectionMode === "explicit" && (
-              <Space.Compact>
-                <span className="ant-input-group-addon">Payment Types</span>
-                <Select
-                  mode="multiple"
-                  showSearch
-                  style={{ width: "420px" }}
-                  value={selectedPmTypes}
-                  onChange={(val) => {
-                    setSelectedPmTypes(val)
+                  Customer
+                </div>
+                <Input
+                  value={customerId}
+                  onChange={(e) => {
+                    setCustomerId(e.target.value)
                     setCustomerSessionClientSecret(null)
                   }}
-                  options={pmTypeOptions}
-                  placeholder="Select payment types"
+                  placeholder="cus_xxx"
                   disabled={isProcessing}
                 />
-              </Space.Compact>
-            )}
-          </Space>
-        </Row>
+              </Col>
 
-        <Button
-          className="mb-4"
-          type="primary"
-          disabled={!isReadyToInitialize}
-          onClick={handleInitializeSession}
-          loading={isProcessing}
-        >
-          Initialize Session
-        </Button>
+              {/* Country */}
+              <Col xs={12} sm={6} md={4}>
+                <div
+                  style={{ marginBottom: 4, fontWeight: 500, color: "#555" }}
+                >
+                  Country / Region
+                </div>
+                <Select
+                  showSearch
+                  value={country}
+                  style={{ width: "100%" }}
+                  onChange={handleCountryChange}
+                  options={COUNTRY_LIST}
+                  placeholder="Select"
+                  disabled={isProcessing}
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                />
+              </Col>
 
-        {/* Payment Element — rendered only after customer session is ready */}
-        {customerSessionClientSecret && stripePromise && (
-          <Elements stripe={stripePromise} options={elementsOptions}>
-            <FormContainer
-              setCustomerSessionClientSecret={setCustomerSessionClientSecret}
-              notify={messageApi}
-              setIsProcessing={setIsProcessing}
-              amount={amount}
-              customerId={customerId}
-              currency={currency}
-              paymentMethodSelectionMode={paymentMethodSelectionMode}
-              selectedPmTypes={selectedPmTypes}
-              isUseSDK={useStripeSDK}
-              selectedConfigId={selectedConfigId}
-            />
-          </Elements>
-        )}
+              {/* Currency */}
+              <Col xs={12} sm={6} md={3}>
+                <div
+                  style={{ marginBottom: 4, fontWeight: 500, color: "#555" }}
+                >
+                  Currency
+                </div>
+                <Select
+                  showSearch
+                  value={currency || undefined}
+                  style={{ width: "100%" }}
+                  onChange={(val) => {
+                    setCurrency(val)
+                    setCustomerSessionClientSecret(null)
+                  }}
+                  options={currencyList}
+                  placeholder="Select"
+                  disabled={isProcessing || !country}
+                />
+              </Col>
+
+              {/* Amount */}
+              <Col xs={24} sm={12} md={5}>
+                <div
+                  style={{ marginBottom: 4, fontWeight: 500, color: "#555" }}
+                >
+                  Amount
+                </div>
+                <InputNumber
+                  style={{ width: "100%" }}
+                  value={amount}
+                  onChange={onChangeAmount}
+                  min={1}
+                  step={1}
+                  disabled={isProcessing}
+                  formatter={(value) =>
+                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }
+                  parser={(value) => Number(value?.replace(/\$\s?|(,*)/g, ""))}
+                />
+              </Col>
+            </Row>
+          </Card>
+
+          {/* Payment method mode selection */}
+          <Card
+            style={{
+              borderRadius: 12,
+              boxShadow: "0 4px 24px rgba(0, 0, 0, 0.08)",
+              marginBottom: 24,
+            }}
+          >
+            <Space direction="vertical" size={12}>
+              <div style={{ fontWeight: 600, fontSize: 15, color: "#333" }}>
+                Payment Method Configuration
+              </div>
+              <Row gutter={[24, 12]} align="middle">
+                <Col>
+                  <span style={{ marginRight: 12, color: "#555" }}>Mode:</span>
+                  <Radio.Group
+                    value={paymentMethodSelectionMode}
+                    onChange={(e) =>
+                      handlePaymentMethodSelectionModeChange(e.target.value)
+                    }
+                    disabled={isProcessing}
+                  >
+                    <Radio value="dynamic">Dynamic</Radio>
+                    <Radio value="explicit">Explicit</Radio>
+                  </Radio.Group>
+                </Col>
+                <Col>
+                  <Space>
+                    <span style={{ color: "#555" }}>Use Stripe SDK:</span>
+                    <Switch
+                      checked={useStripeSDK}
+                      onChange={() => setUseStripeSDK((prev) => !prev)}
+                    />
+                  </Space>
+                </Col>
+              </Row>
+
+              {/* Dynamic: show dropdown of Stripe payment method configurations */}
+              {paymentMethodSelectionMode === "dynamic" && (
+                <Flex align="center" gap={12} wrap="wrap">
+                  <div>
+                    <div
+                      style={{
+                        marginBottom: 4,
+                        fontWeight: 500,
+                        color: "#555",
+                      }}
+                    >
+                      Configuration
+                    </div>
+                    <Select
+                      style={{ width: 360 }}
+                      value={selectedConfigId || undefined}
+                      onChange={(val) => {
+                        setSelectedConfigId(val)
+                        setCustomerSessionClientSecret(null)
+                      }}
+                      options={pmConfigs}
+                      loading={configsLoading}
+                      placeholder={
+                        configsLoading
+                          ? "Loading configurations..."
+                          : pmConfigs.length === 0
+                            ? "Click to load configurations"
+                            : "Select a configuration"
+                      }
+                      disabled={isProcessing}
+                      onOpenChange={(open) => {
+                        if (open && pmConfigs.length === 0 && !configsLoading) {
+                          fetchPmConfigs()
+                        }
+                      }}
+                    />
+                  </div>
+                  <Button
+                    onClick={fetchPmConfigs}
+                    loading={configsLoading}
+                    disabled={isProcessing}
+                    style={{ marginTop: 22 }}
+                  >
+                    Refresh
+                  </Button>
+                </Flex>
+              )}
+
+              {/* Explicit: multi-select from static SDK-derived payment method types */}
+              {paymentMethodSelectionMode === "explicit" && (
+                <div>
+                  <div
+                    style={{ marginBottom: 4, fontWeight: 500, color: "#555" }}
+                  >
+                    Payment Types
+                  </div>
+                  <Select
+                    mode="multiple"
+                    showSearch
+                    style={{ width: "100%", maxWidth: 600 }}
+                    value={selectedPmTypes}
+                    onChange={(val) => {
+                      setSelectedPmTypes(val)
+                      setCustomerSessionClientSecret(null)
+                    }}
+                    options={pmTypeOptions}
+                    placeholder="Select payment types"
+                    disabled={isProcessing}
+                  />
+                </div>
+              )}
+            </Space>
+          </Card>
+
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <Button
+              type="primary"
+              size="large"
+              disabled={!isReadyToInitialize}
+              onClick={handleInitializeSession}
+              loading={isProcessing}
+            >
+              Initialize Session
+            </Button>
+          </div>
+
+          {/* Payment Element — rendered only after customer session is ready */}
+          {customerSessionClientSecret && stripePromise && (
+            <Card
+              style={{
+                borderRadius: 12,
+                boxShadow: "0 4px 24px rgba(0, 0, 0, 0.08)",
+              }}
+            >
+              <Elements stripe={stripePromise} options={elementsOptions}>
+                <FormContainer
+                  setCustomerSessionClientSecret={
+                    setCustomerSessionClientSecret
+                  }
+                  notify={messageApi}
+                  setIsProcessing={setIsProcessing}
+                  amount={amount}
+                  customerId={customerId}
+                  currency={currency}
+                  paymentMethodSelectionMode={paymentMethodSelectionMode}
+                  selectedPmTypes={selectedPmTypes}
+                  isUseSDK={useStripeSDK}
+                  selectedConfigId={selectedConfigId}
+                />
+              </Elements>
+            </Card>
+          )}
+        </div>
       </div>
     </>
   )
