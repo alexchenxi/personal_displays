@@ -11,6 +11,7 @@ import {
   FileImageTwoTone,
 } from "@ant-design/icons"
 import { useTranslations } from "next-intl"
+import NextLink from "next/link"
 import { Link, usePathname } from "@/i18n/routing"
 
 const { Title, Paragraph } = Typography
@@ -82,7 +83,7 @@ export default function HomePage() {
               {t("home.hero.startChat")}
             </Button>
           </Link>
-          <Link href="/stripe-ui">
+          <NextLink href="/stripe-ui">
             <Button
               size="large"
               icon={<CreditCardOutlined />}
@@ -96,7 +97,7 @@ export default function HomePage() {
             >
               {t("home.hero.tryPayment")}
             </Button>
-          </Link>
+          </NextLink>
         </Space>
       </div>
 
@@ -176,7 +177,7 @@ export default function HomePage() {
             </Link>
           </Col>
           <Col xs={24} md={12}>
-            <Link href="/stripe-ui">
+            <NextLink href="/stripe-ui">
               <Card
                 hoverable
                 className={`cursor-pointer transition-all hover:-translate-y-1 ${
@@ -207,10 +208,10 @@ export default function HomePage() {
                   </Col>
                 </Row>
               </Card>
-            </Link>
+            </NextLink>
           </Col>
           <Col xs={24} md={12}>
-            <Link href="/image-inference">
+            <NextLink href="/image-inference">
               <Card
                 hoverable
                 className={`cursor-pointer transition-all hover:-translate-y-1 ${
@@ -243,7 +244,7 @@ export default function HomePage() {
                   </Col>
                 </Row>
               </Card>
-            </Link>
+            </NextLink>
           </Col>
         </Row>
       </div>

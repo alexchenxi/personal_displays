@@ -32,6 +32,7 @@ import { loadStripe, StripeElementsOptions, Stripe } from "@stripe/stripe-js"
 import { useEffect, useState, useMemo, useRef, useCallback } from "react"
 import GlobalLoading from "@/components/GlobalLoading"
 import BackToHome from "@/components/BackToHome"
+import { Alert, Spin } from "antd"
 
 const { Title } = Typography
 
@@ -257,6 +258,8 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
   const [stripePromise, setStripePromise] =
     useState<Promise<Stripe | null> | null>(null)
   const [stripeReady, setStripeReady] = useState(false)
+  const [stripeLoading, setStripeLoading] = useState(true)
+  const [stripeError, setStripeError] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [useStripeSDK, setUseStripeSDK] = useState(true)
 
@@ -293,24 +296,67 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
   }, [])
 
   // Initialize Stripe on mount
-  useEffect(() => {
+  const initializeStripe = useCallback(() => {
     const apiKey = process.env.NEXT_PUBLIC_API_KEY
     if (!apiKey) {
-      messageApi.error("Configuration Error: Missing Stripe API Key")
+      Promise.resolve().then(() => {
+        setStripeError(
+          "Configuration Error: Missing Stripe API Key. Please set NEXT_PUBLIC_API_KEY in your environment variables.",
+        )
+        setStripeLoading(false)
+      })
       return
     }
-    const promise = loadStripe(apiKey)
-    Promise.resolve().then(() => setStripePromise(promise))
-    promise.then((stripe) => {
-      if (!isMountedRef.current) return
-      if (!stripe) {
-        messageApi.error("Failed to initialize Stripe")
-        return
-      }
-      setStripeReady(true)
-      loadCurrencyForCountry("US")
+
+    Promise.resolve().then(() => {
+      setStripeLoading(true)
+      setStripeError(null)
+      setStripeReady(false)
+
+      const promise = loadStripe(apiKey)
+      Promise.resolve().then(() => setStripePromise(promise))
+
+      promise
+        .then((stripe) => {
+          if (!isMountedRef.current) return
+          if (!stripe) {
+            Promise.resolve().then(() => {
+              setStripeError(
+                "Failed to initialize Stripe. Please check your API key and network connection.",
+              )
+              setStripeLoading(false)
+            })
+            return
+          }
+          Promise.resolve()
+            .then(() => {
+              setStripeReady(true)
+              setStripeLoading(false)
+            })
+            .then(() => {
+              loadCurrencyForCountry("US")
+            })
+        })
+        .catch((err) => {
+          if (!isMountedRef.current) return
+          console.error("Stripe initialization error:", err)
+          Promise.resolve().then(() => {
+            setStripeError(
+              `Failed to load Stripe.js: ${err instanceof Error ? err.message : "Unknown error"}. Please check your network connection and try again.`,
+            )
+            setStripeLoading(false)
+          })
+        })
     })
   }, [])
+
+  useEffect(() => {
+    initializeStripe()
+  }, [initializeStripe])
+
+  const handleRetryStripe = useCallback(() => {
+    initializeStripe()
+  }, [initializeStripe])
 
   // --- Helpers ---
 
@@ -401,6 +447,8 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
   const isReadyToInitialize = useMemo(
     () =>
       stripeReady &&
+      !stripeLoading &&
+      !stripeError &&
       !!customerId.trim() &&
       !!currency &&
       amount > 0 &&
@@ -409,6 +457,8 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
         : selectedPmTypes.length > 0),
     [
       stripeReady,
+      stripeLoading,
+      stripeError,
       customerId,
       currency,
       amount,
@@ -478,6 +528,64 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
             Stripe Payment Demo
           </Title>
 
+          {/* Stripe Loading State */}
+          {stripeLoading && (
+            <Card
+              style={{
+                borderRadius: 12,
+                boxShadow: "0 4px 24px rgba(0, 0, 0, 0.08)",
+                marginBottom: 24,
+                textAlign: "center",
+              }}
+            >
+              <Spin size="large" />
+              <div style={{ marginTop: 16, color: "#666" }}>
+                Loading Stripe Payment System...
+              </div>
+            </Card>
+          )}
+
+          {/* Stripe Error State */}
+          {stripeError && !stripeLoading && (
+            <Card
+              style={{
+                borderRadius: 12,
+                boxShadow: "0 4px 24px rgba(0, 0, 0, 0.08)",
+                marginBottom: 24,
+              }}
+            >
+              <Alert
+                message="Stripe Loading Failed"
+                description={
+                  <div>
+                    <p style={{ marginBottom: 12 }}>{stripeError}</p>
+                    <div style={{ marginBottom: 8 }}>
+                      <strong>Troubleshooting Steps:</strong>
+                    </div>
+                    <ul style={{ marginBottom: 12, paddingLeft: 20 }}>
+                      <li>
+                        Verify that your NEXT_PUBLIC_API_KEY environment
+                        variable is correctly set
+                      </li>
+                      <li>Check your internet connection</li>
+                      <li>Ensure the API key is valid and not expired</li>
+                      <li>
+                        Try clearing your browser cache and refreshing the page
+                      </li>
+                    </ul>
+                  </div>
+                }
+                type="error"
+                showIcon
+                action={
+                  <Button type="primary" onClick={handleRetryStripe}>
+                    Retry
+                  </Button>
+                }
+              />
+            </Card>
+          )}
+
           {/* Configuration Panel */}
           <Card
             style={{
@@ -501,7 +609,7 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
                     setCustomerSessionClientSecret(null)
                   }}
                   placeholder="cus_xxx"
-                  disabled={isProcessing}
+                  disabled={isProcessing || stripeLoading || !!stripeError}
                 />
               </Col>
 
@@ -519,7 +627,7 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
                   onChange={handleCountryChange}
                   options={COUNTRY_LIST}
                   placeholder="Select"
-                  disabled={isProcessing}
+                  disabled={isProcessing || stripeLoading || !!stripeError}
                   filterOption={(input, option) =>
                     (option?.label ?? "")
                       .toLowerCase()
@@ -545,7 +653,9 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
                   }}
                   options={currencyList}
                   placeholder="Select"
-                  disabled={isProcessing || !country}
+                  disabled={
+                    isProcessing || !country || stripeLoading || !!stripeError
+                  }
                 />
               </Col>
 
@@ -562,7 +672,7 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
                   onChange={onChangeAmount}
                   min={1}
                   step={1}
-                  disabled={isProcessing}
+                  disabled={isProcessing || stripeLoading || !!stripeError}
                   formatter={(value) =>
                     `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
@@ -593,7 +703,7 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
                       onChange={(e) =>
                         handlePaymentMethodSelectionModeChange(e.target.value)
                       }
-                      disabled={isProcessing}
+                      disabled={isProcessing || stripeLoading || !!stripeError}
                     >
                       <Radio value="dynamic">Dynamic</Radio>
                       <Radio value="explicit">Explicit</Radio>
@@ -641,7 +751,9 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
                               ? "Click to load configurations"
                               : "Select a configuration"
                         }
-                        disabled={isProcessing}
+                        disabled={
+                          isProcessing || stripeLoading || !!stripeError
+                        }
                         onOpenChange={(open) => {
                           if (
                             open &&
@@ -657,7 +769,9 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
                       <Button
                         onClick={fetchPmConfigs}
                         loading={configsLoading}
-                        disabled={isProcessing}
+                        disabled={
+                          isProcessing || stripeLoading || !!stripeError
+                        }
                         block
                       >
                         Refresh
@@ -686,7 +800,7 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
                     }}
                     options={pmTypeOptions}
                     placeholder="Select payment types"
-                    disabled={isProcessing}
+                    disabled={isProcessing || stripeLoading || !!stripeError}
                   />
                 </div>
               )}
