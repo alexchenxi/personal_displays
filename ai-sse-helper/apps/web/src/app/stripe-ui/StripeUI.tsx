@@ -262,6 +262,7 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
   const [stripeError, setStripeError] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [useStripeSDK, setUseStripeSDK] = useState(true)
+  const [paymentSuccessShown, setPaymentSuccessShown] = useState(false)
 
   const [messageApi, contextHolder] = message.useMessage()
   const isMountedRef = useRef(true)
@@ -294,6 +295,61 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
       isMountedRef.current = false
     }
   }, [])
+
+  // Detect payment completion parameters in URL query string
+  useEffect(() => {
+    if (paymentSuccessShown) return
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const paymentIntent = urlParams.get("payment_intent")
+    const clientSecret = urlParams.get("payment_intent_client_secret")
+    const sourceType = urlParams.get("source_type")
+    const redirectStatus = urlParams.get("redirect_status")
+
+    if (sourceType === "card") return
+    if (!paymentIntent || !clientSecret) return
+
+    if (redirectStatus === "succeeded") {
+      messageApi.success(
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            color: "#52c41a",
+            fontWeight: 500,
+          }}
+        >
+          <span>
+            Your payment <strong>&quot;{paymentIntent}&quot;</strong> is paid
+            successfully
+          </span>
+        </div>,
+        5,
+      )
+    } else {
+      messageApi.warning(
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            color: "#ff4d4f",
+            fontWeight: 500,
+          }}
+        >
+          <span>
+            Your payment <strong>&quot;{paymentIntent}&quot;</strong> failed
+          </span>
+        </div>,
+        5,
+      )
+    }
+
+    Promise.resolve().then(() => setPaymentSuccessShown(true))
+    // Optional: Clear the URL parameters to avoid showing the message again on refresh
+    window.history.replaceState({}, document.title, window.location.pathname)
+  }, [paymentSuccessShown, messageApi])
 
   // Initialize Stripe on mount
   const initializeStripe = useCallback(() => {
