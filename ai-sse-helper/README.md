@@ -227,3 +227,5 @@ OPENAI_MODEL=moonshot-v1-8k
 ## License
 
 MIT
+# Stripe Dashboard 
+https://dashboard.stripe.com/acct_1TYMbaRHHNsv5BSW/test/dashboard
