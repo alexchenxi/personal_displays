@@ -102,12 +102,14 @@ export async function POST(request: NextRequest) {
         default_payment_method: paymentMethodId,
       });
     } else {
+      const invoiceCurrency = process.env.PREORDER_INVOICE_CURRENCY || "usd";
       const invoiceAmount = parseInt(
         process.env.PREORDER_INVOICE_AMOUNT || "2000",
         10,
       );
       invoice = await stripe.invoices.create({
         customer,
+        currency: invoiceCurrency,
         auto_advance: true,
         collection_method: "charge_automatically",
         automatically_finalizes_at:
@@ -128,7 +130,7 @@ export async function POST(request: NextRequest) {
         tax_behavior:
           (process.env.PREORDER_INVOICE_TAX_BEHAVIOR ||
             "inclusive") as Stripe.InvoiceItemCreateParams.TaxBehavior,
-        currency: process.env.PREORDER_INVOICE_CURRENCY || "usd",
+        currency: invoiceCurrency,
       });
     }
 

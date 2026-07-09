@@ -137,6 +137,7 @@ function CheckoutForm({
   );
   const [isShippingCollapsed, setIsShippingCollapsed] = useState(false);
   const [showShippingError, setShowShippingError] = useState(false);
+  const [apiErrorMessage, setApiErrorMessage] = useState<string | null>(null);
 
   const handleContinue = useCallback(async () => {
     if (!elements) return;
@@ -196,7 +197,9 @@ function CheckoutForm({
         });
         setSessionComplete(res as PreorderSessionComplete);
       } catch (err) {
-        console.error("Failed to complete preorder:", err);
+        setApiErrorMessage(
+          err instanceof Error ? err.message : "An unexpected error occurred",
+        );
       } finally {
         setIsProcessing(false);
       }
@@ -409,6 +412,21 @@ function CheckoutForm({
                 ? "Update Payment"
                 : "Preorder Now"}
           </button>
+          {apiErrorMessage && (
+            <div
+              style={{
+                marginTop: "12px",
+                padding: "10px 14px",
+                backgroundColor: "#fff0f0",
+                border: "1px solid #dc3545",
+                borderRadius: "4px",
+                color: "#dc3545",
+                fontSize: "14px",
+              }}
+            >
+              {apiErrorMessage}
+            </div>
+          )}
         </>
       )}
     </form>

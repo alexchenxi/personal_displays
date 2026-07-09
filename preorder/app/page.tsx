@@ -87,6 +87,7 @@ function CheckoutForm({
   const [sessionComplete, setSessionComplete] =
     useState<PreorderSessionComplete | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,7 +119,9 @@ function CheckoutForm({
       });
       setSessionComplete(res as PreorderSessionComplete);
     } catch (err) {
-      console.error("Failed to complete preorder:", err);
+      setErrorMessage(
+        err instanceof Error ? err.message : "An unexpected error occurred",
+      );
     } finally {
       setIsProcessing(false);
     }
@@ -152,13 +155,34 @@ function CheckoutForm({
       </h3>
       <PaymentElement />
 
-      <button disabled={!stripe || isProcessing} style={primaryButtonStyle}>
+      <button
+        disabled={!stripe || isProcessing}
+        style={{
+          ...primaryButtonStyle,
+          marginTop: "10px",
+        }}
+      >
         {isProcessing
           ? "Processing..."
           : orderId
             ? "Update Payment"
             : "Preorder Now"}
       </button>
+      {errorMessage && (
+        <div
+          style={{
+            marginTop: "12px",
+            padding: "10px 14px",
+            backgroundColor: "#fff0f0",
+            border: "1px solid #dc3545",
+            borderRadius: "4px",
+            color: "#dc3545",
+            fontSize: "14px",
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
     </form>
   );
 }
