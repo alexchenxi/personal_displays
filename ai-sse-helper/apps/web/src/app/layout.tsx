@@ -1,36 +1,39 @@
-import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import "./globals.css"
-import { AntdRegistry } from "@ant-design/nextjs-registry"
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-})
+import "@ant-design/v5-patch-for-react-19";
+import type { Metadata } from "next";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "AI SSE Helper",
-  description:
-    "Real-time AI streaming chat with SSE, i18n, dark mode, and responsive design",
-}
+  description: "AI SSE streaming and Stripe payment demos",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var theme = localStorage.getItem('theme');
+                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body>
         <AntdRegistry>{children}</AntdRegistry>
       </body>
     </html>
-  )
+  );
 }

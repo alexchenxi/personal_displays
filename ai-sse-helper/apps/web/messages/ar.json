@@ -53,8 +53,12 @@
       "title": "استكشف العروض",
       "aiHelper": "محادثة AI المباشرة",
       "aiHelperDesc": "AI محادثة تفاعلية مع ردود فورية",
+      "preOrder": "طلب مسبق",
+      "preOrderDesc": "عرض توضيحي للطلب المسبق مع جمع العنوان وأسعار الشحن",
       "stripeUI": "واجهة دفع Stripe",
       "stripeUIDesc": "معالجة دفع آمنة وإدارة الاشتراكات",
+      "imageInference": "استدلال الصور",
+      "imageInferenceDesc": "تصنيف الصور باستخدام نموذج EfficientNet-Lite4",
       "visit": "زيارة"
     }
   }

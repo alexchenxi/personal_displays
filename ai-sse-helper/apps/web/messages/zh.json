@@ -53,8 +53,12 @@
       "title": "探索演示",
       "aiHelper": "AI 流式对话",
       "aiHelperDesc": "实时 AI 对话，支持流式响应",
+      "preOrder": "预购",
+      "preOrderDesc": "预购演示，支持地址收集与配送费率",
       "stripeUI": "Stripe 支付界面",
       "stripeUIDesc": "安全的支付处理和订阅管理",
+      "imageInference": "图片推理",
+      "imageInferenceDesc": "使用 EfficientNet-Lite4 模型进行图像分类识别",
       "visit": "前往"
     }
   }

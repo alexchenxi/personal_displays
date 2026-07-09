@@ -4,5 +4,7 @@ import { routing } from "./i18n/routing"
 export default createMiddleware(routing)
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|image-inference|stripe-ui|.*\\..*).*)"],
+  // Only apply i18n middleware to the root and locale-prefixed routes.
+  // All other paths (demos, APIs, static assets) pass through untouched.
+  matcher: ["/", "/(en|zh|ar)/:path*"],
 }

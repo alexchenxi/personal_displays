@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Card, Button, Typography, Space, Row, Col, Tag } from "antd"
+import { Card, Button, Typography, Space, Row, Col, Tag } from "antd";
 import {
   RocketOutlined,
   CreditCardOutlined,
@@ -9,12 +9,13 @@ import {
   SafetyOutlined,
   ArrowRightOutlined,
   FileImageTwoTone,
-} from "@ant-design/icons"
-import { useTranslations } from "next-intl"
-import NextLink from "next/link"
-import { Link, usePathname } from "@/i18n/routing"
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
+import { useTranslations } from "next-intl";
+import NextLink from "next/link";
+import { Link, usePathname } from "@/i18n/routing";
 
-const { Title, Paragraph } = Typography
+const { Title, Paragraph } = Typography;
 
 const features = [
   {
@@ -38,11 +39,11 @@ const features = [
     descKey: "home.features.payment.desc",
     gradient: "from-blue-500 to-cyan-500",
   },
-]
+];
 
 export default function HomePage() {
-  const t = useTranslations()
-  const pathname = usePathname()
+  const t = useTranslations();
+  const pathname = usePathname();
 
   return (
     <div className="mx-auto flex max-w-5xl flex-1 flex-col px-4 py-8">
@@ -177,6 +178,40 @@ export default function HomePage() {
             </Link>
           </Col>
           <Col xs={24} md={12}>
+            <NextLink href="/preorder">
+              <Card
+                hoverable
+                className={`cursor-pointer transition-all hover:-translate-y-1 ${
+                  pathname === "/preorder" ? "ring-2 ring-violet-400" : ""
+                }`}
+              >
+                <Row align="middle" gutter={16}>
+                  <Col>
+                    <div
+                      className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-500"
+                      style={{ color: "#fff", fontSize: 24 }}
+                    >
+                      <ShoppingCartOutlined />
+                    </div>
+                  </Col>
+                  <Col flex={1}>
+                    <Title level={4} style={{ marginBottom: 4 }}>
+                      {t("home.nav.preOrder")}
+                    </Title>
+                    <Paragraph style={{ marginBottom: 0, color: "#666" }}>
+                      {t("home.nav.preOrderDesc")}
+                    </Paragraph>
+                  </Col>
+                  <Col>
+                    <Tag color="purple" className="flex items-center gap-1">
+                      {t("home.nav.visit")} <ArrowRightOutlined />
+                    </Tag>
+                  </Col>
+                </Row>
+              </Card>
+            </NextLink>
+          </Col>
+          <Col xs={24} md={12}>
             <NextLink href="/stripe-ui">
               <Card
                 hoverable
@@ -231,10 +266,10 @@ export default function HomePage() {
                   </Col>
                   <Col flex={1}>
                     <Title level={4} style={{ marginBottom: 4 }}>
-                      图片推理
+                      {t("home.nav.imageInference")}
                     </Title>
                     <Paragraph style={{ marginBottom: 0, color: "#666" }}>
-                      使用 EfficientNet-Lite4 模型进行图像分类识别
+                      {t("home.nav.imageInferenceDesc")}
                     </Paragraph>
                   </Col>
                   <Col>
@@ -249,5 +284,5 @@ export default function HomePage() {
         </Row>
       </div>
     </div>
-  )
+  );
 }

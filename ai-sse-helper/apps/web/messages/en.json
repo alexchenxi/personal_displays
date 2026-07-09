@@ -53,8 +53,12 @@
       "title": "Explore Demos",
       "aiHelper": "AI Streaming Chat",
       "aiHelperDesc": "Real-time conversational AI with streaming responses",
+      "preOrder": "Pre-Order",
+      "preOrderDesc": "Pre-order demo with address collection and shipping rates",
       "stripeUI": "Stripe Payment UI",
       "stripeUIDesc": "Secure payment processing and subscription management",
+      "imageInference": "Image Inference",
+      "imageInferenceDesc": "Image classification using EfficientNet-Lite4 model",
       "visit": "Visit"
     }
   }
