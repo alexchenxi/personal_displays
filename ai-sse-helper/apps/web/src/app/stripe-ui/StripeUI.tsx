@@ -81,10 +81,10 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
   const [stripeError, setStripeError] = useState<string | null>(null);
 
   const initializeStripe = useCallback(() => {
-    const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+    const apiKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
     if (!apiKey) {
       setStripeError(
-        "Configuration Error: Missing Stripe API Key. Please set NEXT_PUBLIC_API_KEY in your environment variables.",
+        "Configuration Error: Missing Stripe API Key. Please set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in your environment variables.",
       );
       setStripeLoading(false);
       return;
@@ -435,8 +435,8 @@ export default function StripeUI({ pmTypeOptions }: StripeUIProps) {
                     </div>
                     <ul style={{ marginBottom: 12, paddingLeft: 20 }}>
                       <li>
-                        Verify that your NEXT_PUBLIC_API_KEY environment
-                        variable is correctly set
+                        Verify that your NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+                        environment variable is correctly set
                       </li>
                       <li>Check your internet connection</li>
                       <li>Ensure the API key is valid and not expired</li>

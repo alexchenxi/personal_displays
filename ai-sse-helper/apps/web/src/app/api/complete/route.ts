@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { PreorderSessionComplete, ResponseError } from "@/types/preorder";
 
-const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY || "");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 function fnvHash(s: string): number {
   let hash = 2166136261;

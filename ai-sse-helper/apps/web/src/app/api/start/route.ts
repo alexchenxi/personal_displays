@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { PreorderSessionStart, ResponseError, AddressInfo, ShippingRate } from "@/types/preorder";
 import { getOrCreateTestClockCustomer } from "@/lib/stripeCustomer";
 
-const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY || "");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 async function createCustomerSession(
   customer: Stripe.Customer,
