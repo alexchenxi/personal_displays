@@ -6,7 +6,7 @@ import { loadStripe, Stripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import GlobalLoading from "@/components/GlobalLoading";
 import BackToHome from "@/components/BackToHome";
-import { createSession, listPaymentMethodConfigurations } from "../api";
+import { createSession, listPaymentMethodConfigurations } from "../../api";
 import StripeConfigPanel from "@/components/stripe/StripeConfigPanel";
 import PaymentForm from "@/components/stripe/PaymentForm";
 import { getCurrencyForCountry } from "@/components/stripe/constants";

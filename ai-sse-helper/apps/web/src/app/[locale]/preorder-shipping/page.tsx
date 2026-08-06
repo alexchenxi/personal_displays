@@ -62,7 +62,7 @@ const formatDeliveryEstimate = (
 
   const { minimum, maximum } = estimate;
   const isSame =
-    minimum.value === maximum.value && minimum.unit === maximum.unit;
+    minimum.value === maximum.value && minimum.unit === minimum.unit;
   const unit = minimum.unit === "business_day" ? "business days" : minimum.unit;
   const value = isSame ? minimum.value : `${minimum.value}~${maximum.value}`;
 
