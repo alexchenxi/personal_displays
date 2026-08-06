@@ -2,7 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { PreorderSessionComplete, ResponseError } from "@/types/preorder";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+let stripeClient: Stripe | null = null;
+function getStripe(): Stripe {
+  if (!stripeClient) {
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+  }
+  return stripeClient;
+}
 
 function fnvHash(s: string): number {
   let hash = 2166136261;
@@ -14,7 +20,7 @@ function fnvHash(s: string): number {
 }
 
 async function findInvoiceByOrderId(orderId: string): Promise<Stripe.Invoice | null> {
-  const result = await stripe.invoices.search({
+  const result = await getStripe().invoices.search({
     query: `metadata['orderId']:'${orderId.replace(/'/g, "\\'")}'`,
   });
   return result.data[0] || null;
@@ -80,11 +86,11 @@ export async function POST(request: NextRequest) {
       oldInvoice = await findInvoiceByOrderId(orderId);
     }
 
-    const confirmationToken = await stripe.confirmationTokens.retrieve(
+    const confirmationToken = await getStripe().confirmationTokens.retrieve(
       confirmationTokenId,
     );
 
-    const setupIntent = await stripe.setupIntents.create({
+    const setupIntent = await getStripe().setupIntents.create({
       customer,
       confirm: true,
       confirmation_token: confirmationTokenId,
@@ -97,7 +103,7 @@ export async function POST(request: NextRequest) {
 
     if (oldInvoice) {
       const shippingUpdate = buildShippingUpdate(confirmationToken);
-      invoice = await stripe.invoices.update(oldInvoice.id, {
+      invoice = await getStripe().invoices.update(oldInvoice.id, {
         ...shippingUpdate,
         default_payment_method: paymentMethodId,
       });
@@ -107,7 +113,7 @@ export async function POST(request: NextRequest) {
         process.env.PREORDER_INVOICE_AMOUNT || "2000",
         10,
       );
-      invoice = await stripe.invoices.create({
+      invoice = await getStripe().invoices.create({
         customer,
         currency: invoiceCurrency,
         auto_advance: true,
@@ -118,12 +124,12 @@ export async function POST(request: NextRequest) {
       });
 
       const shippingUpdate = buildShippingUpdate(confirmationToken);
-      invoice = await stripe.invoices.update(invoice.id, {
+      invoice = await getStripe().invoices.update(invoice.id, {
         ...shippingUpdate,
         metadata: { orderId: String(fnvHash(invoice.id)) },
       });
 
-      await stripe.invoiceItems.create({
+      await getStripe().invoiceItems.create({
         customer,
         invoice: invoice.id,
         amount: invoiceAmount,

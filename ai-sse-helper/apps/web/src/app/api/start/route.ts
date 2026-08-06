@@ -3,12 +3,18 @@ import Stripe from "stripe";
 import { PreorderSessionStart, ResponseError, AddressInfo, ShippingRate } from "@/types/preorder";
 import { getOrCreateTestClockCustomer } from "@/lib/stripeCustomer";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+let stripeClient: Stripe | null = null;
+function getStripe(): Stripe {
+  if (!stripeClient) {
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+  }
+  return stripeClient;
+}
 
 async function createCustomerSession(
   customer: Stripe.Customer,
 ): Promise<Stripe.CustomerSession> {
-  return stripe.customerSessions.create({
+  return getStripe().customerSessions.create({
     customer: customer.id,
     components: {
       payment_element: {
@@ -24,7 +30,7 @@ async function createCustomerSession(
 }
 
 async function findInvoiceByOrderId(orderId: string): Promise<Stripe.Invoice | null> {
-  const result = await stripe.invoices.search({
+  const result = await getStripe().invoices.search({
     query: `metadata['orderId']:'${orderId.replace(/'/g, "\\'")}'`,
   });
   return result.data[0] || null;
@@ -55,7 +61,7 @@ function extractShippingAddress(invoice: Stripe.Invoice): AddressInfo | undefine
 }
 
 async function listShippingRates(): Promise<ShippingRate[]> {
-  const rates = await stripe.shippingRates.list({ active: true, limit: 10 });
+  const rates = await getStripe().shippingRates.list({ active: true, limit: 10 });
   return rates.data.map((rate) => ({
     id: rate.id,
     display_name: rate.display_name || "",
@@ -95,7 +101,7 @@ export async function POST(request: NextRequest) {
       throw new Error("STRIPE_CUSTOMER_EMAIL is missing.");
     }
 
-    const customer = await getOrCreateTestClockCustomer(stripe, email);
+    const customer = await getOrCreateTestClockCustomer(getStripe(), email);
     const customerSession = await createCustomerSession(customer);
     const shippingRateList = await listShippingRates();
 
